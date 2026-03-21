@@ -67,42 +67,62 @@
 
     <script>
         // 這裡替換成你 n8n 的 Webhook URL
-        const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
+const N8N_WEBHOOK_URL = 'https://你的_n8n_網址/webhook/story-camera';
 
-        const cameraInput = document.getElementById('cameraInput');
-        const statusText = document.getElementById('status');
-        const previewImg = document.getElementById('preview');
+const cameraInput = document.getElementById('cameraInput');
+const statusText = document.getElementById('status');
+const previewImg = document.getElementById('preview');
 
-        cameraInput.addEventListener('change', async function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+// 建立一個隱藏的音樂播放器
+const audioPlayer = new Audio();
 
-            previewImg.src = URL.createObjectURL(file);
-            previewImg.style.display = 'block';
-            statusText.innerText = '✨ 魔法精靈正在寫故事，請等一下喔...';
+cameraInput.addEventListener('change', async function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-            const formData = new FormData();
-            formData.append('data', file); 
+    // 顯示預覽圖
+    previewImg.src = URL.createObjectURL(file);
+    previewImg.style.display = 'block';
+    statusText.innerText = '✨ 魔法精靈正在寫故事，請等一下喔...';
+    statusText.style.color = '#555';
 
-            try {
-                const response = await fetch(N8N_WEBHOOK_URL, {
-                    method: 'POST',
-                    body: formData
-                });
+    const formData = new FormData();
+    formData.append('data', file); 
 
-                if (response.ok) {
-                    statusText.innerText = '✅ 故事寫好囉！快打開米米故事機吧！';
-                    statusText.style.color = '#4CAF50';
-                } else {
-                    statusText.innerText = '❌ 哎呀，魔法精靈迷路了，再拍一次好嗎？';
-                    statusText.style.color = 'red';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                statusText.innerText = '❌ 網路好像斷線了，請爸爸幫忙檢查一下！';
-                statusText.style.color = 'red';
-            }
+    try {
+        const response = await fetch(N8N_WEBHOOK_URL, {
+            method: 'POST',
+            body: formData
         });
+
+        if (response.ok) {
+            statusText.innerText = '✅ 故事來囉！請仔細聽...';
+            statusText.style.color = '#4CAF50';
+            
+            // 將 n8n 回傳的檔案轉成 Blob，並餵給播放器
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            audioPlayer.src = audioUrl;
+            
+            // 開始播放故事！
+            audioPlayer.play();
+            
+            // 播放結束後的貼心提示
+            audioPlayer.onended = function() {
+                statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
+                statusText.style.color = '#ff6b6b';
+            };
+
+        } else {
+            statusText.innerText = '❌ 哎呀，魔法精靈迷路了，再拍一次好嗎？';
+            statusText.style.color = 'red';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        statusText.innerText = '❌ 網路好像斷線了，請爸爸幫忙檢查一下！';
+        statusText.style.color = 'red';
+    }
+});
     </script>
 </body>
 </html>
