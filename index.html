@@ -37,6 +37,14 @@
         .camera-btn:active {
             transform: scale(0.95);
         }
+        /* 新增的播放按鈕樣式，顏色稍微不一樣做區隔 */
+        #playBtn {
+            background-color: #4CAF50;
+            color: white;
+            border: 5px solid #388E3C;
+            display: none; /* 預設隱藏，故事來了才顯示 */
+            margin-top: 20px;
+        }
         #status {
             margin-top: 20px;
             font-size: 18px;
@@ -59,70 +67,85 @@
 
     <h1>📸 米米故事機</h1>
 
-    <label for="cameraInput" class="camera-btn">按我拍照！</label>
+    <label for="cameraInput" id="cameraLabel" class="camera-btn">按我拍照！</label>
     <input type="file" id="cameraInput" accept="image/*" capture="environment">
 
     <img id="preview" src="" alt="照片預覽">
     <div id="status">準備好聽故事了嗎？</div>
 
+    <button id="playBtn" class="camera-btn">▶️ 點我聽故事</button>
+
     <script>
-        // 這裡替換成你 n8n 的 Webhook URL
-const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
+        const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
 
-const cameraInput = document.getElementById('cameraInput');
-const statusText = document.getElementById('status');
-const previewImg = document.getElementById('preview');
+        const cameraInput = document.getElementById('cameraInput');
+        const cameraLabel = document.getElementById('cameraLabel');
+        const statusText = document.getElementById('status');
+        const previewImg = document.getElementById('preview');
+        const playBtn = document.getElementById('playBtn');
 
-// 建立一個隱藏的音樂播放器
-const audioPlayer = new Audio();
+        const audioPlayer = new Audio();
 
-cameraInput.addEventListener('change', async function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+        cameraInput.addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-    // 顯示預覽圖
-    previewImg.src = URL.createObjectURL(file);
-    previewImg.style.display = 'block';
-    statusText.innerText = '✨ 魔法精靈正在寫故事，請等一下喔...';
-    statusText.style.color = '#555';
+            // 顯示預覽圖，隱藏拍照按鈕，避免重複按
+            previewImg.src = URL.createObjectURL(file);
+            previewImg.style.display = 'block';
+            cameraLabel.style.display = 'none';
+            playBtn.style.display = 'none';
+            statusText.innerText = '✨ 魔法精靈正在寫故事，請等一下喔...';
+            statusText.style.color = '#555';
 
-    const formData = new FormData();
-    formData.append('data', file); 
+            const formData = new FormData();
+            formData.append('data', file); 
 
-    try {
-        const response = await fetch(N8N_WEBHOOK_URL, {
-            method: 'POST',
-            body: formData
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    statusText.innerText = '✅ 故事寫好囉！';
+                    statusText.style.color = '#4CAF50';
+                    
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayer.src = audioUrl;
+                    
+                    // 故事準備好了，秀出播放按鈕讓孩子按！
+                    playBtn.style.display = 'block';
+
+                } else {
+                    statusText.innerText = '❌ 哎呀，魔法精靈迷路了，再拍一次好嗎？';
+                    statusText.style.color = 'red';
+                    cameraLabel.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusText.innerText = '❌ 網路好像斷線了，請爸爸幫忙檢查一下！';
+                statusText.style.color = 'red';
+                cameraLabel.style.display = 'block';
+            }
         });
 
-        if (response.ok) {
-            statusText.innerText = '✅ 故事來囉！請仔細聽...';
-            statusText.style.color = '#4CAF50';
-            
-            // 將 n8n 回傳的檔案轉成 Blob，並餵給播放器
-            const audioBlob = await response.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-            audioPlayer.src = audioUrl;
-            
-            // 開始播放故事！
+        // 綁定播放按鈕的事件
+        playBtn.addEventListener('click', function() {
             audioPlayer.play();
-            
-            // 播放結束後的貼心提示
-            audioPlayer.onended = function() {
-                statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
-                statusText.style.color = '#ff6b6b';
-            };
+            playBtn.style.display = 'none'; // 按下後隱藏播放按鈕
+            statusText.innerText = '🎶 故事播放中...';
+            statusText.style.color = '#2196F3';
+        });
 
-        } else {
-            statusText.innerText = '❌ 哎呀，魔法精靈迷路了，再拍一次好嗎？';
-            statusText.style.color = 'red';
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        statusText.innerText = '❌ 網路好像斷線了，請爸爸幫忙檢查一下！';
-        statusText.style.color = 'red';
-    }
-});
+        audioPlayer.onended = function() {
+            statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
+            statusText.style.color = '#ff6b6b';
+            cameraLabel.style.display = 'block'; // 重新顯示拍照按鈕
+            previewImg.style.display = 'none';
+        };
+
     </script>
 </body>
 </html>
