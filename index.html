@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>米米故事機</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            font-family: 'Arial', sans-serif;
+        }
+        h1 {
+            color: #ff6b6b;
+            margin-bottom: 30px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .camera-btn {
+            background-color: #ffcc00;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 40px 60px;
+            border-radius: 50px;
+            border: 5px solid #ff9900;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .camera-btn:active {
+            transform: scale(0.95);
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+            font-weight: bold;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #preview {
+            margin-top: 20px;
+            max-width: 80%;
+            max-height: 200px;
+            border-radius: 15px;
+            display: none;
+            border: 3px dashed #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📸 米米故事機</h1>
+
+    <label for="cameraInput" class="camera-btn">按我拍照！</label>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+
+    <img id="preview" src="" alt="照片預覽">
+    <div id="status">準備好聽故事了嗎？</div>
+
+    <script>
+        // 這裡替換成你 n8n 的 Webhook URL
+        const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
+
+        const cameraInput = document.getElementById('cameraInput');
+        const statusText = document.getElementById('status');
+        const previewImg = document.getElementById('preview');
+
+        cameraInput.addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            previewImg.src = URL.createObjectURL(file);
+            previewImg.style.display = 'block';
+            statusText.innerText = '✨ 魔法精靈正在寫故事，請等一下喔...';
+
+            const formData = new FormData();
+            formData.append('data', file); 
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    statusText.innerText = '✅ 故事寫好囉！快打開米米故事機吧！';
+                    statusText.style.color = '#4CAF50';
+                } else {
+                    statusText.innerText = '❌ 哎呀，魔法精靈迷路了，再拍一次好嗎？';
+                    statusText.style.color = 'red';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusText.innerText = '❌ 網路好像斷線了，請爸爸幫忙檢查一下！';
+                statusText.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
