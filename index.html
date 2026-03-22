@@ -88,7 +88,6 @@
             margin-top: 20px;
         }
         
-        /* 新增的：重新登入按鈕 (橘色系區隔) */
         #retryLoginBtn {
             background-color: #FF9800;
             color: white;
@@ -104,6 +103,7 @@
             font-weight: bold;
             text-align: center;
             padding: 0 20px;
+            line-height: 1.5;
         }
         #preview {
             margin-top: 20px;
@@ -139,7 +139,14 @@
     </div>
 
     <script>
+        // ==========================================
+        // 🛠️ 爸爸專用設定區 🛠️
+        // ==========================================
         const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
+        
+        const MAX_STORIES = 5;       // 短時間內最多可以聽幾個故事
+        const COOLDOWN_HOURS = 3;    // 聽滿後，需要休息幾個小時才能再聽
+        // ==========================================
 
         const loginScreen = document.getElementById('loginScreen');
         const mainScreen = document.getElementById('mainScreen');
@@ -158,7 +165,6 @@
             }
         }
 
-        // 登入按鈕
         loginBtn.addEventListener('click', function() {
             const pwd = passwordInput.value.trim();
             if (pwd !== '') {
@@ -182,8 +188,49 @@
         const statusText = document.getElementById('status');
         const previewImg = document.getElementById('preview');
         const playBtn = document.getElementById('playBtn');
-        const retryLoginBtn = document.getElementById('retryLoginBtn'); // 綁定新按鈕
+        const retryLoginBtn = document.getElementById('retryLoginBtn'); 
         const audioPlayer = new Audio();
+
+        // ⭐️ 攔截點：在打開相機「之前」，先檢查額度跟時間！
+        cameraInput.addEventListener('click', function(event) {
+            const now = Date.now();
+            let cooldownUntil = parseInt(localStorage.getItem('mimi_cooldownUntil')) || 0;
+            let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
+            let lastStoryTime = parseInt(localStorage.getItem('mimi_lastStoryTime')) || 0;
+
+            // 規則一：如果距離上一次聽故事已經超過休息時間，自動把額度補滿 (重置歸零)
+            if (lastStoryTime > 0 && (now - lastStoryTime) > (COOLDOWN_HOURS * 60 * 60 * 1000)) {
+                storyCount = 0;
+                cooldownUntil = 0;
+                localStorage.setItem('mimi_storyCount', 0);
+                localStorage.setItem('mimi_cooldownUntil', 0);
+            }
+
+            // 規則二：檢查是否正在「強制休息」狀態中
+            if (cooldownUntil > 0 && now < cooldownUntil) {
+                event.preventDefault(); // 阻止相機開啟
+                const remainingMs = cooldownUntil - now;
+                const hours = Math.floor(remainingMs / (1000 * 60 * 60));
+                const mins = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                let timeMsg = hours > 0 ? `${hours} 小時 ${mins} 分鐘` : `${mins} 分鐘`;
+                statusText.innerHTML = `😴 <b>魔法精靈睡午覺囉！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
+                statusText.style.color = '#FF9800';
+                return;
+            }
+
+            // 規則三：檢查今天是否已經聽滿額度
+            if (storyCount >= MAX_STORIES) {
+                event.preventDefault(); // 阻止相機開啟
+                // 觸發休息時間，開始倒數
+                const newCooldown = now + (COOLDOWN_HOURS * 60 * 60 * 1000);
+                localStorage.setItem('mimi_cooldownUntil', newCooldown);
+                
+                statusText.innerHTML = `✨ <b>已經聽完 ${MAX_STORIES} 個故事囉！</b><br>魔法精靈要去休息 ${COOLDOWN_HOURS} 小時了，晚點再來吧！掰掰！`;
+                statusText.style.color = '#FF9800';
+                return;
+            }
+        });
 
         cameraInput.addEventListener('change', async function(event) {
             const file = event.target.files[0];
@@ -193,7 +240,7 @@
             previewImg.style.display = 'block';
             cameraLabel.style.display = 'none';
             playBtn.style.display = 'none';
-            retryLoginBtn.style.display = 'none'; // 隱藏重試按鈕
+            retryLoginBtn.style.display = 'none'; 
             statusText.innerText = '✨ 魔法精靈正在確認通關密語...';
             statusText.style.color = '#555';
 
@@ -208,20 +255,26 @@
                 });
 
                 if (response.ok) {
-                    statusText.innerText = '✅ 密碼正確！故事寫好囉！';
+                    // ⭐️ 成功拿到故事後，才扣除額度
+                    let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
+                    storyCount++;
+                    localStorage.setItem('mimi_storyCount', storyCount);
+                    localStorage.setItem('mimi_lastStoryTime', Date.now());
+
+                    const remaining = MAX_STORIES - storyCount;
+                    statusText.innerText = `✅ 故事寫好囉！(本次還能再聽 ${remaining} 個)`;
                     statusText.style.color = '#4CAF50';
+                    
                     const audioBlob = await response.blob();
                     const audioUrl = URL.createObjectURL(audioBlob);
                     audioPlayer.src = audioUrl;
                     playBtn.style.display = 'block';
                 } else {
-                    // ⭐️ n8n 退件 (密碼錯誤) 觸發這裡
                     statusText.innerText = '❌ 通關密語不對喔！請重新登入。';
                     statusText.style.color = 'red';
-                    localStorage.removeItem('magicPassword'); // 清除錯誤密碼
+                    localStorage.removeItem('magicPassword');
                     localStorage.removeItem('loginDate');
                     
-                    // 隱藏拍照按鈕，秀出重新登入按鈕
                     cameraLabel.style.display = 'none';
                     retryLoginBtn.style.display = 'block';
                 }
@@ -232,19 +285,16 @@
             }
         });
 
-        // 綁定「重新輸入密碼」按鈕的動作
         retryLoginBtn.addEventListener('click', function() {
-            // 切換回登入畫面
             mainScreen.style.display = 'none';
             loginScreen.style.display = 'flex';
             
-            // 恢復相機畫面的預設狀態，為下次做準備
             retryLoginBtn.style.display = 'none';
             cameraLabel.style.display = 'block';
             statusText.innerText = '準備好聽故事了嗎？';
             statusText.style.color = '#555';
             previewImg.style.display = 'none';
-            passwordInput.value = ''; // 清空剛才輸入的密碼欄位
+            passwordInput.value = ''; 
         });
 
         playBtn.addEventListener('click', function() {
@@ -255,7 +305,12 @@
         });
 
         audioPlayer.onended = function() {
-            statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
+            let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
+            if (storyCount >= MAX_STORIES) {
+                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>你已經聽滿 ${MAX_STORIES} 個囉，請按下面的按鈕讓精靈去睡覺！`;
+            } else {
+                statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
+            }
             statusText.style.color = '#ff6b6b';
             cameraLabel.style.display = 'block'; 
             previewImg.style.display = 'none';
