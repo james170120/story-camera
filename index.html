@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>米米故事機</title>
-    
     <link rel="apple-touch-icon" href="icon.png">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
-    
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
     <style>
         body {
             display: flex;
@@ -21,14 +17,55 @@
             margin: 0;
             background-color: #f0f8ff;
             font-family: 'Arial', sans-serif;
+            overflow: hidden;
         }
-        h1 {
-            color: #ff6b6b;
-            margin-bottom: 30px;
+        h1 { color: #ff6b6b; margin-bottom: 20px; }
+        
+        /* 登入畫面 (通關密語) */
+        #loginScreen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
         }
-        input[type="file"] {
+        input[type="text"] {
+            font-size: 24px;
+            padding: 15px;
+            border-radius: 15px;
+            border: 3px solid #ccc;
+            text-align: center;
+            width: 60%;
+            margin-bottom: 20px;
+        }
+        #loginBtn {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 40px;
+            border-radius: 30px;
+            border: 5px solid #388E3C;
+            cursor: pointer;
+        }
+        
+        /* 故事機主要畫面 */
+        #mainScreen {
             display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
+        #greetingText {
+            font-size: 22px;
+            color: #2196F3;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        input[type="file"] { display: none; }
         .camera-btn {
             background-color: #ffcc00;
             color: #333;
@@ -41,15 +78,12 @@
             cursor: pointer;
             transition: transform 0.1s;
         }
-        .camera-btn:active {
-            transform: scale(0.95);
-        }
-        /* 新增的播放按鈕樣式，顏色稍微不一樣做區隔 */
+        .camera-btn:active { transform: scale(0.95); }
         #playBtn {
             background-color: #4CAF50;
             color: white;
             border: 5px solid #388E3C;
-            display: none; /* 預設隱藏，故事來了才顯示 */
+            display: none;
             margin-top: 20px;
         }
         #status {
@@ -72,32 +106,91 @@
 </head>
 <body>
 
-    <h1>📸 米米故事機</h1>
+    <div id="loginScreen">
+        <h1>🔐 米米故事機</h1>
+        <div style="font-size: 18px; color: #555; margin-bottom: 10px; font-weight: bold;">請輸入今天的通關密語：</div>
+        <input type="text" id="passwordInput" placeholder="輸入密碼">
+        <button id="loginBtn">進入魔法相機</button>
+        <div id="loginError" style="color: red; margin-top: 15px; font-weight: bold; display: none;">密碼不對喔，再去問問爸爸！</div>
+    </div>
 
-    <label for="cameraInput" id="cameraLabel" class="camera-btn">按我拍照！</label>
-    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+    <div id="mainScreen">
+        <h1>📸 米米故事機</h1>
+        <div id="greetingText"></div>
 
-    <img id="preview" src="" alt="照片預覽">
-    <div id="status">準備好聽故事了嗎？</div>
+        <label for="cameraInput" id="cameraLabel" class="camera-btn">按我拍照！</label>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment">
 
-    <button id="playBtn" class="camera-btn">▶️ 點我聽故事</button>
+        <img id="preview" src="" alt="照片預覽">
+        <div id="status">準備好聽故事了嗎？</div>
+        <button id="playBtn" class="camera-btn">▶️ 點我聽故事</button>
+    </div>
 
     <script>
         const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
 
+        // 爸爸可以在這裡設定密碼與小孩名字的對應！
+        const passwordMap = {
+            'A123': '小米',
+            'B456': '弟弟'
+        };
+
+        const loginScreen = document.getElementById('loginScreen');
+        const mainScreen = document.getElementById('mainScreen');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const greetingText = document.getElementById('greetingText');
+        let currentChildName = '';
+
+        // 檢查今天是否已經登入過
+        function checkLogin() {
+            const today = new Date().toDateString(); // 取得今天的日期字串
+            const savedDate = localStorage.getItem('loginDate');
+            const savedName = localStorage.getItem('childName');
+
+            if (savedDate === today && savedName) {
+                // 如果日期是今天，且有存名字，就直接進入畫面
+                currentChildName = savedName;
+                showMainScreen();
+            }
+        }
+
+        // 處理登入按鈕
+        loginBtn.addEventListener('click', function() {
+            const pwd = passwordInput.value.trim();
+            if (passwordMap[pwd]) {
+                currentChildName = passwordMap[pwd];
+                const today = new Date().toDateString();
+                localStorage.setItem('loginDate', today);
+                localStorage.setItem('childName', currentChildName);
+                showMainScreen();
+            } else {
+                loginError.style.display = 'block';
+            }
+        });
+
+        function showMainScreen() {
+            loginScreen.style.display = 'none';
+            mainScreen.style.display = 'flex';
+            greetingText.innerText = `👋 嗨，${currentChildName}！今天想拍什麼呢？`;
+        }
+
+        // 網頁載入時立刻檢查
+        checkLogin();
+
+        // --- 以下是原本的拍照與播放邏輯 ---
         const cameraInput = document.getElementById('cameraInput');
         const cameraLabel = document.getElementById('cameraLabel');
         const statusText = document.getElementById('status');
         const previewImg = document.getElementById('preview');
         const playBtn = document.getElementById('playBtn');
-
         const audioPlayer = new Audio();
 
         cameraInput.addEventListener('change', async function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            // 顯示預覽圖，隱藏拍照按鈕，避免重複按
             previewImg.src = URL.createObjectURL(file);
             previewImg.style.display = 'block';
             cameraLabel.style.display = 'none';
@@ -107,6 +200,8 @@
 
             const formData = new FormData();
             formData.append('data', file); 
+            // ⭐️ 關鍵：把現在登入的小孩名字，跟著照片一起傳給 n8n
+            formData.append('childName', currentChildName); 
 
             try {
                 const response = await fetch(N8N_WEBHOOK_URL, {
@@ -117,31 +212,25 @@
                 if (response.ok) {
                     statusText.innerText = '✅ 故事寫好囉！';
                     statusText.style.color = '#4CAF50';
-                    
                     const audioBlob = await response.blob();
                     const audioUrl = URL.createObjectURL(audioBlob);
                     audioPlayer.src = audioUrl;
-                    
-                    // 故事準備好了，秀出播放按鈕讓孩子按！
                     playBtn.style.display = 'block';
-
                 } else {
-                    statusText.innerText = '❌ 哎呀，魔法精靈迷路了，再拍一次好嗎？';
+                    statusText.innerText = '❌ 魔法精靈迷路了，再拍一次好嗎？';
                     statusText.style.color = 'red';
                     cameraLabel.style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error:', error);
-                statusText.innerText = '❌ 網路好像斷線了，請爸爸幫忙檢查一下！';
+                statusText.innerText = '❌ 網路斷線了，請爸爸幫忙！';
                 statusText.style.color = 'red';
                 cameraLabel.style.display = 'block';
             }
         });
 
-        // 綁定播放按鈕的事件
         playBtn.addEventListener('click', function() {
             audioPlayer.play();
-            playBtn.style.display = 'none'; // 按下後隱藏播放按鈕
+            playBtn.style.display = 'none'; 
             statusText.innerText = '🎶 故事播放中...';
             statusText.style.color = '#2196F3';
         });
@@ -149,10 +238,9 @@
         audioPlayer.onended = function() {
             statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
             statusText.style.color = '#ff6b6b';
-            cameraLabel.style.display = 'block'; // 重新顯示拍照按鈕
+            cameraLabel.style.display = 'block'; 
             previewImg.style.display = 'none';
         };
-
     </script>
 </body>
 </html>
