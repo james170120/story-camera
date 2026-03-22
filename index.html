@@ -21,7 +21,7 @@
         }
         h1 { color: #ff6b6b; margin-bottom: 20px; }
         
-        /* 登入畫面 (通關密語) */
+        /* 登入畫面 */
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -79,6 +79,7 @@
             transition: transform 0.1s;
         }
         .camera-btn:active { transform: scale(0.95); }
+        
         #playBtn {
             background-color: #4CAF50;
             color: white;
@@ -86,6 +87,16 @@
             display: none;
             margin-top: 20px;
         }
+        
+        /* 新增的：重新登入按鈕 (橘色系區隔) */
+        #retryLoginBtn {
+            background-color: #FF9800;
+            color: white;
+            border: 5px solid #F57C00;
+            display: none;
+            margin-top: 20px;
+        }
+
         #status {
             margin-top: 20px;
             font-size: 18px;
@@ -111,7 +122,6 @@
         <div style="font-size: 18px; color: #555; margin-bottom: 10px; font-weight: bold;">請輸入今天的通關密語：</div>
         <input type="text" id="passwordInput" placeholder="輸入密碼">
         <button id="loginBtn">進入魔法相機</button>
-        <div id="loginError" style="color: red; margin-top: 15px; font-weight: bold; display: none;">密碼不對喔，再去問問爸爸！</div>
     </div>
 
     <div id="mainScreen">
@@ -123,113 +133,133 @@
 
         <img id="preview" src="" alt="照片預覽">
         <div id="status">準備好聽故事了嗎？</div>
+        
         <button id="playBtn" class="camera-btn">▶️ 點我聽故事</button>
+        <button id="retryLoginBtn" class="camera-btn">🔄 重新輸入密碼</button>
     </div>
 
     <script>
         const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
 
-const loginScreen = document.getElementById('loginScreen');
-const mainScreen = document.getElementById('mainScreen');
-const passwordInput = document.getElementById('passwordInput');
-const loginBtn = document.getElementById('loginBtn');
-const greetingText = document.getElementById('greetingText');
+        const loginScreen = document.getElementById('loginScreen');
+        const mainScreen = document.getElementById('mainScreen');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const greetingText = document.getElementById('greetingText');
 
-// 檢查是否登入過
-function checkLogin() {
-    const today = new Date().toDateString();
-    const savedDate = localStorage.getItem('loginDate');
-    const savedPwd = localStorage.getItem('magicPassword'); // 改成記住密碼
+        // 檢查是否登入過
+        function checkLogin() {
+            const today = new Date().toDateString();
+            const savedDate = localStorage.getItem('loginDate');
+            const savedPwd = localStorage.getItem('magicPassword');
 
-    if (savedDate === today && savedPwd) {
-        showMainScreen();
-    }
-}
+            if (savedDate === today && savedPwd) {
+                showMainScreen();
+            }
+        }
 
-// 登入按鈕 (網頁不檢查對錯了，直接記下來放行進相機)
-loginBtn.addEventListener('click', function() {
-    const pwd = passwordInput.value.trim();
-    if (pwd !== '') {
-        localStorage.setItem('magicPassword', pwd);
-        localStorage.setItem('loginDate', new Date().toDateString());
-        showMainScreen();
-    }
-});
-
-function showMainScreen() {
-    loginScreen.style.display = 'none';
-    mainScreen.style.display = 'flex';
-    greetingText.innerText = `👋 嗨！準備好拍神奇的照片了嗎？`; 
-    // 注意：這裡先不叫名字，等 n8n 驗證過後，故事語音裡再叫！
-}
-
-checkLogin();
-
-// --- 拍照與發送邏輯 ---
-const cameraInput = document.getElementById('cameraInput');
-const cameraLabel = document.getElementById('cameraLabel');
-const statusText = document.getElementById('status');
-const previewImg = document.getElementById('preview');
-const playBtn = document.getElementById('playBtn');
-const audioPlayer = new Audio();
-
-cameraInput.addEventListener('change', async function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    previewImg.src = URL.createObjectURL(file);
-    previewImg.style.display = 'block';
-    cameraLabel.style.display = 'none';
-    playBtn.style.display = 'none';
-    statusText.innerText = '✨ 魔法精靈正在確認通關密語...';
-    statusText.style.color = '#555';
-
-    const formData = new FormData();
-    formData.append('data', file); 
-    
-    // ⭐️ 關鍵：把存在手機裡的密碼，跟著照片一起送給 n8n 審查！
-    formData.append('password', localStorage.getItem('magicPassword')); 
-
-    try {
-        const response = await fetch(N8N_WEBHOOK_URL, {
-            method: 'POST',
-            body: formData
+        // 登入按鈕
+        loginBtn.addEventListener('click', function() {
+            const pwd = passwordInput.value.trim();
+            if (pwd !== '') {
+                localStorage.setItem('magicPassword', pwd);
+                localStorage.setItem('loginDate', new Date().toDateString());
+                showMainScreen();
+            }
         });
 
-        // 如果 n8n 檢查密碼錯誤中斷了，就會回傳失敗，直接擋下來！
-        if (response.ok) {
-            statusText.innerText = '✅ 密碼正確！故事寫好囉！';
-            statusText.style.color = '#4CAF50';
-            const audioBlob = await response.blob();
-            const audioUrl = URL.createObjectURL(audioBlob);
-            audioPlayer.src = audioUrl;
-            playBtn.style.display = 'block';
-        } else {
-            statusText.innerText = '❌ 通關密語好像不對喔！請重新整理網頁再試一次。';
-            statusText.style.color = 'red';
-            localStorage.removeItem('magicPassword'); // 密碼錯了就清除，強迫重登
-            cameraLabel.style.display = 'block';
+        function showMainScreen() {
+            loginScreen.style.display = 'none';
+            mainScreen.style.display = 'flex';
+            greetingText.innerText = `👋 嗨！準備好拍神奇的照片了嗎？`; 
         }
-    } catch (error) {
-        statusText.innerText = '❌ 網路斷線了，請爸爸幫忙檢查一下！';
-        statusText.style.color = 'red';
-        cameraLabel.style.display = 'block';
-    }
-});
 
-playBtn.addEventListener('click', function() {
-    audioPlayer.play();
-    playBtn.style.display = 'none'; 
-    statusText.innerText = '🎶 故事播放中...';
-    statusText.style.color = '#2196F3';
-});
+        checkLogin();
 
-audioPlayer.onended = function() {
-    statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
-    statusText.style.color = '#ff6b6b';
-    cameraLabel.style.display = 'block'; 
-    previewImg.style.display = 'none';
-};
+        // --- 拍照與發送邏輯 ---
+        const cameraInput = document.getElementById('cameraInput');
+        const cameraLabel = document.getElementById('cameraLabel');
+        const statusText = document.getElementById('status');
+        const previewImg = document.getElementById('preview');
+        const playBtn = document.getElementById('playBtn');
+        const retryLoginBtn = document.getElementById('retryLoginBtn'); // 綁定新按鈕
+        const audioPlayer = new Audio();
+
+        cameraInput.addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            previewImg.src = URL.createObjectURL(file);
+            previewImg.style.display = 'block';
+            cameraLabel.style.display = 'none';
+            playBtn.style.display = 'none';
+            retryLoginBtn.style.display = 'none'; // 隱藏重試按鈕
+            statusText.innerText = '✨ 魔法精靈正在確認通關密語...';
+            statusText.style.color = '#555';
+
+            const formData = new FormData();
+            formData.append('data', file); 
+            formData.append('password', localStorage.getItem('magicPassword')); 
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    statusText.innerText = '✅ 密碼正確！故事寫好囉！';
+                    statusText.style.color = '#4CAF50';
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayer.src = audioUrl;
+                    playBtn.style.display = 'block';
+                } else {
+                    // ⭐️ n8n 退件 (密碼錯誤) 觸發這裡
+                    statusText.innerText = '❌ 通關密語不對喔！請重新登入。';
+                    statusText.style.color = 'red';
+                    localStorage.removeItem('magicPassword'); // 清除錯誤密碼
+                    localStorage.removeItem('loginDate');
+                    
+                    // 隱藏拍照按鈕，秀出重新登入按鈕
+                    cameraLabel.style.display = 'none';
+                    retryLoginBtn.style.display = 'block';
+                }
+            } catch (error) {
+                statusText.innerText = '❌ 網路斷線了，請爸爸幫忙檢查一下！';
+                statusText.style.color = 'red';
+                cameraLabel.style.display = 'block';
+            }
+        });
+
+        // 綁定「重新輸入密碼」按鈕的動作
+        retryLoginBtn.addEventListener('click', function() {
+            // 切換回登入畫面
+            mainScreen.style.display = 'none';
+            loginScreen.style.display = 'flex';
+            
+            // 恢復相機畫面的預設狀態，為下次做準備
+            retryLoginBtn.style.display = 'none';
+            cameraLabel.style.display = 'block';
+            statusText.innerText = '準備好聽故事了嗎？';
+            statusText.style.color = '#555';
+            previewImg.style.display = 'none';
+            passwordInput.value = ''; // 清空剛才輸入的密碼欄位
+        });
+
+        playBtn.addEventListener('click', function() {
+            audioPlayer.play();
+            playBtn.style.display = 'none'; 
+            statusText.innerText = '🎶 故事播放中...';
+            statusText.style.color = '#2196F3';
+        });
+
+        audioPlayer.onended = function() {
+            statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
+            statusText.style.color = '#ff6b6b';
+            cameraLabel.style.display = 'block'; 
+            previewImg.style.display = 'none';
+        };
     </script>
 </body>
 </html>
