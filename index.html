@@ -125,18 +125,24 @@
         /* 拍照按鈕 (超大正圓形相機圖案) */
         #cameraLabel {
             background: linear-gradient(180deg, #f6e58d 0%, #f9ca24 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 120px;        /* 稍微縮小一點相機按鈕 */
+            display: block;      /* ⭐️ 改成 block，不用 flex 了 */
+            position: relative;  /* ⭐️ 加上相對定位，當作相機圖案的基準點 */
+            width: 120px;        
             height: 120px;
             padding: 0;          
             border-radius: 50%;  
             font-size: 0px;      
-            margin-top: 10px; /* 照片消失時，讓按鈕下來一點 */
+            margin-top: 10px; 
+            -webkit-tap-highlight-color: transparent; /* ⭐️ 關掉手機點擊時的預設灰色反白 */
+            user-select: none;   /* ⭐️ 防止圖案被當成文字選取 */
+            -webkit-user-select: none;
         }
         #cameraLabel::after {
             content: '📸';       
+            position: absolute;  /* ⭐️ 絕對定位，釘死在中央 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* ⭐️ 完美置中魔法 */
             font-size: 60px;     
             line-height: 1;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
