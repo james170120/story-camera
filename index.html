@@ -19,8 +19,8 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            /* === 👇 專屬天空背景圖設定 (使用 image_14.png) 👇 === */
-            background-image: url('whimsical_sky.png'); /* 請將我生成的背景圖片上傳到根目錄 */
+            /* === 👇 專屬天空背景圖設定 👇 === */
+            background-image: url('whimsical_sky.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -29,10 +29,10 @@
             overflow: hidden;
         }
         
-        /* === 👉 修改：標題：深紅色故事書標籤框 (模仿圖二) 👇 === */
+        /* === 👉 標題：深紅色故事書標籤框 === */
         .fairytale-tag {
-            background-color: #d63031; /* 深紅色背景 */
-            border: 4px solid #f9ca24; /* 金色邊框 */
+            background-color: #d63031; 
+            border: 4px solid #f9ca24; 
             border-radius: 10px;
             padding: 10px 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -40,10 +40,9 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 25px;
-            position: relative; /* 為裝飾角做準備 */
+            position: relative; 
         }
         
-        /* 模仿圖二的金色裝飾角 (使用純 CSS 繪製) */
         .fairytale-tag::before, .fairytale-tag::after {
             content: '';
             position: absolute;
@@ -59,9 +58,9 @@
         }
 
         h1 { 
-            color: white; /* 模仿圖二白色文字 */
+            color: white; 
             margin: 0; 
-            text-shadow: 2px 2px 0px #8e1b1b, 0px 0px 10px white; /* 白色描邊+紅色陰影 */
+            text-shadow: 2px 2px 0px #8e1b1b, 0px 0px 10px white; 
             font-family: 'Nunito', sans-serif;
             font-weight: 900;
             font-size: 32px;
@@ -71,7 +70,7 @@
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(240, 248, 255, 0.9); /* 半透明鵝黃色背景 */
+            background-color: rgba(240, 248, 255, 0.9); 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -82,7 +81,7 @@
             font-size: 24px;
             padding: 15px;
             border-radius: 15px;
-            border: 4px solid #f3a683; /* 邊框加粗變可愛 */
+            border: 4px solid #f3a683; 
             text-align: center;
             width: 60%;
             margin-bottom: 20px;
@@ -92,30 +91,29 @@
             font-weight: bold;
         }
         
-        /* === 👉 修改：童話風圖章按鈕基础設定 👇 === */
-        /* 將所有主要按鈕改為復古圖章形狀 */
+        /* === 👉 童話風圖章按鈕基础設定 === */
         .story-stamp {
             color: white;
             font-size: 24px;
             font-weight: 900;
             padding: 20px 40px; 
-            border-radius: 50%; /* 圓形圖章 */
+            border-radius: 50px; 
             cursor: pointer;
             transition: all 0.1s;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             font-family: 'Nunito', sans-serif;
-            border: 6px solid #e2af65; /* 金屬質感圖章邊 */
+            border: 6px solid #e2af65; 
             box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.2);
         }
         .story-stamp:active { 
-            transform: scale(0.95); 
-            box-shadow: 0 2px 0 #b07d3f !important;
+            transform: scale(0.95) translateY(4px); 
+            box-shadow: 0 0px 0 #b07d3f !important;
         }
 
         /* 登入頁面中央 Parchment 框 */
         .parchment-box {
-            background: #f7e8c3; /* 淡羊皮紙色 */
-            border: 3px solid #a3815f; /* 深棕色邊框 */
+            background: #f7e8c3; 
+            border: 3px solid #a3815f; 
             border-radius: 20px;
             padding: 30px;
             display: flex;
@@ -125,16 +123,29 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        /* 拍照按鈕 (金色系) */
+        /* === 👉 修正：拍照按鈕 (超大正圓形相機圖案) === */
         #cameraLabel {
             background: linear-gradient(180deg, #f6e58d 0%, #f9ca24 100%);
-            display: block; /* 確保 label 可以按 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 130px;        /* 寬度固定 */
+            height: 130px;       /* 高度固定，變成正圓 */
+            padding: 0;          /* 移除橢圓形的 padding */
+            border-radius: 50%;  /* 變圓形 */
+            font-size: 0px;      /* 隱藏原本的「按我拍照！」文字 */
+        }
+        #cameraLabel::after {
+            content: '📸';       /* CSS 魔法：直接塞入相機 Emoji */
+            font-size: 65px;     /* 相機大小 */
+            line-height: 1;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.2); /* 相機的立體陰影 */
         }
         
         /* 播放按鈕 (藍色系) */
         #playBtn {
             background: linear-gradient(180deg, #82ccdd 0%, #60a3bc 100%);
-            border: 6px solid #e2af65; /* 保持金色邊框 */
+            border: 6px solid #e2af65; 
             display: none;
             margin-top: 20px;
         }
@@ -142,11 +153,10 @@
         /* 重新登入按鈕 (紅色系) */
         #retryLoginBtn {
             background: linear-gradient(180deg, #fab1a0 0%, #e17055 100%);
-            border: 6px solid #e2af65; /* 保持金色邊框 */
+            border: 6px solid #e2af65; 
             display: none;
             margin-top: 20px;
         }
-        /* ========================================= */
 
         /* 主要畫面 */
         #mainScreen {
@@ -156,22 +166,22 @@
             width: 100%;
         }
         
-        /* === 👉 修改：問候語：復古羊皮紙圖章框 (模仿圖二) 👇 === */
+        /* === 👉 修正：羊皮紙問候語不跑版 === */
         #greetingText {
-            font-size: 26px;
-            color: #1a4d70; /* 深藍色 (與天空和氣球協調) */
+            font-size: 24px; /* 稍微縮小字體讓排版更精緻 */
+            color: #1a4d70; 
             font-weight: 900;
             margin-bottom: 30px;
-            background-image: url('parchment_seal.png'); /* 請將我生成的 Parchment 圖章上傳到根目錄 */
-            background-size: contain;
+            background-image: url('parchment_seal.png'); 
+            background-size: 100% 100%; /* 強制背景圖拉伸填滿框框 */
             background-position: center;
             background-repeat: no-repeat;
-            padding: 30px 40px; /* 調整內距以容納文字 */
+            padding: 65px 50px; /* 上下左右留超大內距，把字擠在羊皮紙中間 */
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.5;
             font-family: 'Baloo 2', 'Nunito', sans-serif;
-            border-radius: 0; /* 移除圓角 */
-            box-shadow: none; /* 移除陰影 */
+            width: 85%; /* 控制整體寬度適合手機螢幕 */
+            box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
         }
         
         input[type="file"] { display: none; }
@@ -185,9 +195,9 @@
             text-align: center;
             padding: 15px 25px;
             line-height: 1.5;
-            background-color: rgba(255, 255, 255, 0.7); /* 半透明鵝黃色背景 */
+            background-color: rgba(255, 255, 255, 0.85); 
             border-radius: 15px;
-            border: 3px dashed #f3a683; /* 加個可愛的虛線框 */
+            border: 3px dashed #f3a683; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             font-family: 'Baloo 2', 'Nunito', sans-serif;
         }
