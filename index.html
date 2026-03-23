@@ -24,22 +24,24 @@
             background-position: center;
             background-repeat: no-repeat;
             font-family: 'Nunito', 'Arial', sans-serif;
-            overflow: hidden; /* 確保內容超出螢幕時不出現滾動條 */
+            overflow: hidden;
+            /* ⭐️ 商業級細節：加上螢幕邊緣暈影，增加畫面深度感 */
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.4);
         }
         
-        /* === 👉 標題：深紅色故事書標籤框 === */
+        /* === 標題：深紅色故事書標籤框 (層次強化版) === */
         .fairytale-tag {
-            background-color: #d63031; 
+            background: linear-gradient(135deg, #d63031 0%, #b32323 100%);
             border: 4px solid #f9ca24; 
-            border-radius: 10px;
-            padding: 8px 20px; /* 稍微縮小內距 */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 8px 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 10px rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px; /* 減少底部邊距，讓出空間 */
+            margin-bottom: 15px;
             position: relative; 
-            z-index: 10; /* 確保標題在最上層 */
+            z-index: 10;
         }
         
         .fairytale-tag::before, .fairytale-tag::after {
@@ -59,13 +61,13 @@
         h1 { 
             color: white; 
             margin: 0; 
-            text-shadow: 2px 2px 0px #8e1b1b, 0px 0px 10px white; 
+            text-shadow: 2px 2px 0px #8e1b1b, 0px 0px 15px rgba(255,255,255,0.4); 
             font-family: 'Nunito', sans-serif;
             font-weight: 900;
-            font-size: 28px; /* 稍微縮小標題字體 */
+            font-size: 28px;
         }
         
-        /* 登入畫面 */
+        /* === 登入畫面：透明背景透出魔法背景 === */
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -75,15 +77,15 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
-            /* 如果你覺得背景太亮，想讓中間的盒子更明顯，可以加一點點淡出的黑色煙霧感 (可選) */
-            background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(0,0,0,0.1) 100%);
+            background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(0,0,0,0.2) 100%);
         }
         .login-box {
             background: #f7e8c3; 
-            border: 4px solid #a3815f; 
-            border-radius: 25px;
+            border: 5px solid #a3815f; 
+            border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); /* 增加陰影，讓盒子像浮在空中 */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            text-align: center;
         }
         input[type="text"] {
             font-size: 24px;
@@ -91,180 +93,172 @@
             border-radius: 15px;
             border: 4px solid #f3a683; 
             text-align: center;
-            width: 60%;
-            margin-bottom: 20px;
+            width: 80%;
+            margin-bottom: 25px;
             background-color: white;
             color: #333;
             font-family: 'Nunito', sans-serif;
             font-weight: bold;
         }
         
-        /* === 修正：登入按鈕與魔法光暈效果 === */
+        /* === 通用按鈕樣式：魔法閃爍光芒 === */
+        .story-stamp {
+            color: white;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Nunito', sans-serif;
+            border: 6px solid #e2af65; 
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ⭐️ 魔法閃光動畫 */
+        .story-stamp::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -150%;
+            width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -150%; }
+            30% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        /* 登入按鈕：呼吸燈 */
         #loginBtn {
             background: linear-gradient(180deg, #78e08f 0%, #38ada9 100%);
-            border: 4px solid #e2af65; 
-            box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.3);
-            
-            /* 👇 注入魔法光暈文字 👇 */
-            text-shadow: 
-                0 0 10px rgba(255, 255, 255, 1),   /* 第一層：白光核心 */
-                0 0 15px rgba(255, 242, 0, 0.8),    /* 第二層：黃色發光 */
-                1px 1px 2px rgba(0, 0, 0, 0.4);     /* 第三層：深色邊緣 */
-
-            /* 👇 啟動呼吸燈動畫 👇 */
+            font-size: 32px;
+            padding: 20px 60px;
+            border-radius: 60px;
+            box-shadow: 0 10px 0 #2d8a87, 0 15px 30px rgba(0,0,0,0.3);
+            text-shadow: 0 0 10px white, 0 0 15px rgba(255,242,0,0.8);
             animation: magic-breathing 2.5s ease-in-out infinite;
-            /* 👇 ⭐️ 在這裡加入覆蓋設定 ⭐️ 👇 */
-            font-size: 32px;     /* ⭐️ 加大字體大小，更清晰 */
-            padding: 18px 60px;  /* ⭐️ 從原本的內距加大，撐大按鈕 */
         }
 
-        /* === 魔法呼吸燈動畫設定 === */
         @keyframes magic-breathing {
-            0% { transform: scale(1); box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.3); }
-            50% { 
-                transform: scale(1.05); /* 輕微放大 */
-                /* 讓發光變得更強一點 */
-                box-shadow: 0 4px 0 #b07d3f, 0 0px 25px rgba(255, 242, 0, 0.6); 
-            }
-            100% { transform: scale(1); box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.3); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 4px 0 #2d8a87, 0 0px 30px rgba(255, 242, 0, 0.6); }
+            100% { transform: scale(1); }
         }
 
-        /* 確保按鈕被按下去時動畫會暫停，才有按壓感 */
         #loginBtn:active { 
-            animation: none; 
+            animation: none;
             transform: scale(0.95) translateY(4px); 
-            box-shadow: 0 0px 0 #b07d3f !important;
+            box-shadow: 0 0px 0 #2d8a87 !important;
         }
 
-        /* 登入頁面中央 Parchment 框 */
-        .parchment-box {
-            background: #f7e8c3; 
-            border: 3px solid #a3815f; 
-            border-radius: 20px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-
-        /* 拍照按鈕 (超大正圓形相機圖案) */
+        /* === 拍照按鈕：加大且固定位置 === */
         #cameraLabel {
             background: linear-gradient(180deg, #f6e58d 0%, #f9ca24 100%);
-            display: block;      /* ⭐️ 改成 block，不用 flex 了 */
-            position: relative;  /* ⭐️ 加上相對定位，當作相機圖案的基準點 */
-            width: 120px;        
-            height: 120px;
+            display: block;      
+            position: relative;  
+            width: 155px;        
+            height: 155px;
             padding: 0;          
             border-radius: 50%;  
             font-size: 0px;      
-            margin-top: 10px; 
-            -webkit-tap-highlight-color: transparent; /* ⭐️ 關掉手機點擊時的預設灰色反白 */
-            user-select: none;   /* ⭐️ 防止圖案被當成文字選取 */
-            -webkit-user-select: none;
+            margin-top: 15px; 
+            box-shadow: 0 10px 0 #b07d3f, 0 15px 30px rgba(0,0,0,0.3);
+            -webkit-tap-highlight-color: transparent;
         }
         #cameraLabel::after {
             content: '📸';       
-            position: absolute;  /* ⭐️ 絕對定位，釘死在中央 */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* ⭐️ 完美置中魔法 */
+            position: absolute;  
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%); 
             font-size: 85px;     
             line-height: 1;
             text-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
         }
         
-        /* 播放按鈕 (藍色系) */
+        /* 播放按鈕 */
         #playBtn {
             background: linear-gradient(180deg, #82ccdd 0%, #60a3bc 100%);
-            border: 6px solid #e2af65; 
+            padding: 16px 60px;
+            border-radius: 50px;
+            font-size: 32px;
+            margin-top: 15px;
+            box-shadow: 0 10px 0 #3d7e97, 0 15px 30px rgba(0,0,0,0.3);
             display: none;
-            margin-top: 15px; /* 減少上方距離 */
-            /* 👇 ⭐️ 在這裡加入覆蓋設定 ⭐️ 👇 */
-            font-size: 32px;     /* ⭐️ 加大字體大小，更清晰 */
-            padding: 14px 60px;  /* ⭐️ 從原本的內距加大，撐大按鈕 */
-        }
-        
-        /* 重新登入按鈕 (紅色系) */
-        #retryLoginBtn {
-            background: linear-gradient(180deg, #fab1a0 0%, #e17055 100%);
-            border: 6px solid #e2af65; 
-            display: none;
-            margin-top: 15px; /* 減少上方距離 */
         }
 
-        /* 主要畫面 */
+        /* === 主要畫面排版 === */
         #mainScreen {
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* ⭐️ 重要：讓內容從上方開始排，不要全部擠在中間 */
-            padding-top: 30px; /* 給最上方留一點呼吸空間 */
+            justify-content: flex-start;
+            padding-top: 30px;
             width: 100%;
             height: 100vh;
             box-sizing: border-box;
         }
         
-        /* === 羊皮紙問候語：紅字 + 魔法黃白光暈 === */
+        /* === 羊皮紙問候語：倒角 + 紅字光暈 === */
         #greetingText {
             font-size: 22px; 
-            color: #d63031;      /* ⭐️ 經典故事紅，呼應上方標籤 */
+            color: #d63031; 
             font-weight: 900;
             margin-bottom: 15px;
             background-image: url('parchment_seal.png'); 
             background-size: 100% 100%; 
             background-position: center;
             background-repeat: no-repeat;
-            padding: 45px 40px; 
+            padding: 50px 45px; 
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.5;
             font-family: 'Baloo 2', 'Nunito', sans-serif;
-            width: 85%; 
+            width: 88%; 
             box-sizing: border-box; 
-            border-radius: 35px; 
+            border-radius: 40px; 
             overflow: hidden;
-            /* 如果你希望邊緣有一點點淡出的感覺，可以再加這一行 */
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            /* 👇 多層次魔法光暈效果 👇 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             text-shadow: 
-                0 0 12px rgba(255, 255, 255, 1),   /* 第一層：強效白光，徹底切斷背景色 */
-                0 0 8px rgba(255, 242, 0, 0.7),    /* 第二層：暖黃色魔法光暈 */
-                1px 1px 2px rgba(0, 0, 0, 0.2);    /* 第三層：極細微陰影，增加立體感 */
-
+                0 0 12px rgba(255, 255, 255, 1),   
+                0 0 8px rgba(255, 242, 0, 0.7),    
+                1px 1px 2px rgba(0, 0, 0, 0.2);
         }
         
         input[type="file"] { display: none; }
 
-        /* ⭐️ 修正：狀態欄 (調整為適合羊皮紙背景的色調與大小) */
-        #status {
+        /* === ⭐️ 商業級細節：拍立得照片相框 === */
+        #preview {
             margin-top: 15px;
-            font-size: 18px; /* 稍微縮小字體 */
-            color: #333;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px 20px;
-            line-height: 1.4;
-            background-color: rgba(247, 232, 195, 0.85); /* ⭐️ 改為帶有羊皮紙色的半透明背景 */
-            border-radius: 15px;
-            border: 3px dashed #f3a683; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            font-family: 'Baloo 2', 'Nunito', sans-serif;
-            max-width: 90%;
-            color: #3d2b1f; /* 統一改為深咖啡色 */
-            background-color: rgba(255, 255, 255, 0.6); /* 稍微增加透明感，透出後面的紙感 */
-            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
+            max-width: 65%;
+            max-height: 200px;
+            display: none;
+            padding: 12px 12px 40px 12px; /* 底部留白做拍立得效果 */
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transform: rotate(-3deg); /* 微微傾斜更自然 */
+            border: none;
         }
 
-        /* 預覽照片 */
-        #preview {
-            margin-top: 10px; /* 減少與上面元素的距離 */
-            max-width: 70%; /* 稍微縮小照片預覽的寬度，節省高度空間 */
-            max-height: 180px; /* 限制照片最大高度 */
-            border-radius: 15px;
-            display: none;
-            border: 5px solid #fff;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        /* === 狀態欄：磨砂玻璃質感 === */
+        #status {
+            margin-top: 20px;
+            font-size: 19px;
+            color: #d63031; 
+            font-weight: 900;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            max-width: 85%;
+            text-shadow: 0 0 10px white;
+            text-align: center;
         }
     </style>
 </head>
@@ -274,8 +268,8 @@
         <div class="fairytale-tag">
             <h1>🔐 魔法照片故事機</h1>
         </div>
-        <div class="parchment-box login-box">
-            <div style="font-size: 20px; color: #e17055; margin-bottom: 15px; font-weight: 900;">請輸入今天的魔法咒語：</div>
+        <div class="login-box">
+            <div style="font-size: 20px; color: #d63031; margin-bottom: 15px; font-weight: 900; text-shadow: 0 0 10px white;">請輸入今天的魔法咒語：</div>
             <input type="text" id="passwordInput" placeholder="輸入咒語">
             <button id="loginBtn" class="story-stamp">進入魔法相機</button>
         </div>
@@ -286,24 +280,23 @@
             <h1>📸 魔法照片故事機</h1>
         </div>
         <div id="greetingText"></div>
-        <label for="cameraInput" id="cameraLabel" class="camera-btn story-stamp">按我拍照！</label>
+        <label for="cameraInput" id="cameraLabel" class="story-stamp"></label>
         <input type="file" id="cameraInput" accept="image/*" capture="environment">
         <img id="preview" src="" alt="照片預覽">
         
         <div id="status">一起來聽故事吧！</div>
         
-        <button id="playBtn" class="camera-btn story-stamp">▶️ 點我聽故事</button>
-        <button id="retryLoginBtn" class="camera-btn story-stamp">🔄 重新輸入魔法咒語</button>
+        <button id="playBtn" class="story-stamp">▶️ 點我聽故事</button>
+        <button id="retryLoginBtn" class="story-stamp" style="background: linear-gradient(180deg, #fab1a0 0%, #e17055 100%); margin-top:15px; padding:10px 25px; border-radius:30px; font-size:18px;">🔄 重新輸入魔法咒語</button>
     </div>
 
     <script>
         // ==========================================
-        // 🛠️ 爸爸專用設定區 🛠️ (請勿移除)
+        // 🛠️ 爸爸專用設定區 🛠️
         // ==========================================
         const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
-        
-        const MAX_STORIES = 5;       // 短時間內最多可以聽幾個故事
-        const COOLDOWN_HOURS = 3;    // 聽滿後，需要休息幾個小時才能再聽
+        const MAX_STORIES = 5;       
+        const COOLDOWN_HOURS = 3;    
         // ==========================================
 
         const loginScreen = document.getElementById('loginScreen');
@@ -312,15 +305,11 @@
         const loginBtn = document.getElementById('loginBtn');
         const greetingText = document.getElementById('greetingText');
 
-        // 檢查是否登入過
         function checkLogin() {
             const today = new Date().toDateString();
             const savedDate = localStorage.getItem('loginDate');
             const savedPwd = localStorage.getItem('magicPassword');
-
-            if (savedDate === today && savedPwd) {
-                showMainScreen();
-            }
+            if (savedDate === today && savedPwd) { showMainScreen(); }
         }
 
         loginBtn.addEventListener('click', function() {
@@ -335,14 +324,11 @@
         function showMainScreen() {
             loginScreen.style.display = 'none';
             mainScreen.style.display = 'flex';
-            
-            // ⭐️ 修正：從 innerText 改為 innerHTML，並加入 <br> 換行
-            greetingText.innerHTML = `✨魔法提示✨<br>找到...你有興趣的東西<br>按下照相機`; 
-        } // ⭐️ 修正：刪除了多餘的右括號
+            greetingText.innerHTML = `✨魔法提示✨<br>找到...你有興趣的東西<br>按下照相機拍照吧`; 
+        }
 
         checkLogin();
 
-        // --- 拍照與發送邏輯 ---
         const cameraInput = document.getElementById('cameraInput');
         const cameraLabel = document.getElementById('cameraLabel');
         const statusText = document.getElementById('status');
@@ -351,7 +337,6 @@
         const retryLoginBtn = document.getElementById('retryLoginBtn'); 
         const audioPlayer = new Audio();
 
-        // 防沉迷檢查
         cameraInput.addEventListener('click', function(event) {
             const now = Date.now();
             let cooldownUntil = parseInt(localStorage.getItem('mimi_cooldownUntil')) || 0;
@@ -359,8 +344,7 @@
             let lastStoryTime = parseInt(localStorage.getItem('mimi_lastStoryTime')) || 0;
 
             if (lastStoryTime > 0 && (now - lastStoryTime) > (COOLDOWN_HOURS * 60 * 60 * 1000)) {
-                storyCount = 0;
-                cooldownUntil = 0;
+                storyCount = 0; cooldownUntil = 0;
                 localStorage.setItem('mimi_storyCount', 0);
                 localStorage.setItem('mimi_cooldownUntil', 0);
             }
@@ -368,15 +352,11 @@
             if (cooldownUntil > 0 && now < cooldownUntil) {
                 event.preventDefault(); 
                 const remainingMs = cooldownUntil - now;
-                
-                // ⭐️ 修正：更精準的時間計算，避免出現「60 分鐘」
                 const totalMins = Math.ceil(remainingMs / (1000 * 60));
                 const hours = Math.floor(totalMins / 60);
                 const mins = totalMins % 60;
-                
                 let timeMsg = hours > 0 ? `${hours} 小時 ${mins} 分鐘` : `${mins} 分鐘`;
-                statusText.innerHTML = `😴 <b>魔法精靈睡覺補充能量中！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
-                statusText.style.color = '#e17055';
+                statusText.innerHTML = `😴 <b>精靈睡覺補充能量中！</b><br>等 ${timeMsg} 後再來玩喔！`;
                 return;
             }
 
@@ -384,9 +364,7 @@
                 event.preventDefault(); 
                 const newCooldown = now + (COOLDOWN_HOURS * 60 * 60 * 1000);
                 localStorage.setItem('mimi_cooldownUntil', newCooldown);
-                
-                statusText.innerHTML = `✨ <b>已經聽完 ${MAX_STORIES} 個故事囉！</b><br>魔法精靈要去休息 ${COOLDOWN_HOURS} 小時了，晚點再來吧！掰掰！`;
-                statusText.style.color = '#e17055';
+                statusText.innerHTML = `✨ <b>故事都講完囉！</b><br>魔法精靈休息 ${COOLDOWN_HOURS} 小時後再回來！`;
                 return;
             }
         });
@@ -401,44 +379,32 @@
             playBtn.style.display = 'none';
             retryLoginBtn.style.display = 'none'; 
             statusText.innerText = '✨ 魔法精靈正在確認通關密語...';
-            statusText.style.color = '#555';
 
             const formData = new FormData();
             formData.append('data', file); 
             formData.append('password', localStorage.getItem('magicPassword')); 
 
             try {
-                const response = await fetch(N8N_WEBHOOK_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-
+                const response = await fetch(N8N_WEBHOOK_URL, { method: 'POST', body: formData });
                 if (response.ok) {
                     let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
                     storyCount++;
                     localStorage.setItem('mimi_storyCount', storyCount);
                     localStorage.setItem('mimi_lastStoryTime', Date.now());
-
                     const remaining = MAX_STORIES - storyCount;
-                    statusText.innerText = `✅ 故事寫好囉！(本次還能再聽 ${remaining} 個)`;
-                    statusText.style.color = '#38ada9';
-                    
+                    statusText.innerText = `✅ 故事寫好囉！(還能再聽 ${remaining} 個)`;
                     const audioBlob = await response.blob();
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    audioPlayer.src = audioUrl;
+                    audioPlayer.src = URL.createObjectURL(audioBlob);
                     playBtn.style.display = 'block';
                 } else {
-                    statusText.innerText = '❌ 魔法咒語不對喔！請重新施展嘿。';
-                    statusText.style.color = '#d63031';
+                    statusText.innerText = '❌ 咒語不對喔！請重新施展嘿。';
                     localStorage.removeItem('magicPassword');
                     localStorage.removeItem('loginDate');
-                    
                     cameraLabel.style.display = 'none';
                     retryLoginBtn.style.display = 'block';
                 }
             } catch (error) {
-                statusText.innerText = '❌ 咦~網路斷線了捏，快請爸爸幫忙檢查一下！';
-                statusText.style.color = '#d63031';
+                statusText.innerText = '❌ 咦~網路斷線了，快請爸爸檢查！';
                 cameraLabel.style.display = 'block';
             }
         });
@@ -446,11 +412,9 @@
         retryLoginBtn.addEventListener('click', function() {
             mainScreen.style.display = 'none';
             loginScreen.style.display = 'flex';
-            
             retryLoginBtn.style.display = 'none';
             cameraLabel.style.display = 'block';
-            statusText.innerText = '準備好聽故事了嗎？';
-            statusText.style.color = '#555';
+            statusText.innerText = '一起來聽故事吧！';
             previewImg.style.display = 'none';
             passwordInput.value = ''; 
         });
@@ -459,22 +423,18 @@
             audioPlayer.play();
             playBtn.style.display = 'none'; 
             statusText.innerText = '🎶 故事播放中...';
-            statusText.style.color = '#38ada9';
         });
 
         audioPlayer.onended = function() {
             let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
-            // ⭐️ 修正：🎉 故事說完啦！
             if (storyCount >= MAX_STORIES) {
-                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>你已經聽滿 ${MAX_STORIES} 個囉，請讓精靈去睡覺補充能量吧！`;
+                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>今天聽滿囉，讓精靈去睡覺休息吧！`;
             } else {
                 statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
             }
-            statusText.style.color = '#ff6b6b';
             cameraLabel.style.display = 'block'; 
             previewImg.style.display = 'none';
         };
     </script>
-    
-    </body>
+</body>
 </html>
