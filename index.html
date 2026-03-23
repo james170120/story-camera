@@ -264,6 +264,22 @@
             text-shadow: 0 0 10px white;
             text-align: center;
         }
+        /* === ⭐️ 新增：播放中狀態的專屬動畫 === */
+        @keyframes status-pulse {
+            0% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+            50% { 
+                transform: scale(1.03); 
+                box-shadow: 0 0 25px rgba(56, 173, 169, 0.7); /* 發出藍綠色魔法光 */
+                border-color: #38ada9;
+            }
+            100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
+        }
+        
+        /* 當 JavaScript 加上這個 class 時，就會啟動動畫 */
+        .playing-active {
+            animation: status-pulse 2s ease-in-out infinite;
+            color: #38ada9 !important; /* 文字變成清爽的藍綠色 */
+        }
     </style>
 </head>
 <body>
@@ -427,15 +443,21 @@
             audioPlayer.play();
             playBtn.style.display = 'none'; 
             statusText.innerText = '🎶 故事播放中...';
+            /* 👇 ⭐️ 新增這行：開啟播放動畫 👇 */
+            statusText.classList.add('playing-active');
         });
 
         audioPlayer.onended = function() {
+            /* 👇 ⭐️ 新增這行：故事結束，關閉動畫 👇 */
+            statusText.classList.remove('playing-active');
+            
             let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
             if (storyCount >= MAX_STORIES) {
                 statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>今天聽滿囉，讓精靈去睡覺休息吧！`;
             } else {
                 statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
             }
+            statusText.style.color = '#ff6b6b';
             cameraLabel.style.display = 'block'; 
             previewImg.style.display = 'none';
         };
