@@ -176,31 +176,32 @@
             box-sizing: border-box;
         }
         
-        /* === 👉 修正：羊皮紙問候語「瘦身」 === */
+        /* === 羊皮紙問候語：紅字 + 魔法黃白光暈 === */
         #greetingText {
-            font-size: 22px; /* ⭐️ 字體縮小 */
-            color: #3d2b1f; 
+            font-size: 22px; 
+            color: #d63031;      /* ⭐️ 經典故事紅，呼應上方標籤 */
             font-weight: 900;
-            margin-bottom: 15px; /* ⭐️ 減少底部邊距 */
+            margin-bottom: 15px;
             background-image: url('parchment_seal.png'); 
             background-size: 100% 100%; 
             background-position: center;
             background-repeat: no-repeat;
-            padding: 45px 40px; /* ⭐️ 減少上下內距，讓羊皮紙變矮 */
+            padding: 45px 40px; 
             text-align: center;
             line-height: 1.4;
             font-family: 'Baloo 2', 'Nunito', sans-serif;
             width: 85%; 
-            box-sizing: border-box;
-            border-radius: 30px;    /* ⭐️ 數值越大，角就越圓。你可以試試 20px ~ 50px */
-            overflow: hidden;       /* ⭐️ 確保背景圖案會乖乖被裁切在圓角內，不會刺出來 */
-            
+            box-sizing: border-box; 
+            border-radius: 35px; 
+            overflow: hidden;
             /* 如果你希望邊緣有一點點淡出的感覺，可以再加這一行 */
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            
-            /* 魔法亮點：淡淡的白色光暈，讓字體在皺褶背景上更清晰 */
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), 
-                         0px 0px 5px rgba(255, 255, 255, 0.5);
+            /* 👇 多層次魔法光暈效果 👇 */
+            text-shadow: 
+                0 0 12px rgba(255, 255, 255, 1),   /* 第一層：強效白光，徹底切斷背景色 */
+                0 0 8px rgba(255, 242, 0, 0.7),    /* 第二層：暖黃色魔法光暈 */
+                1px 1px 2px rgba(0, 0, 0, 0.2);    /* 第三層：極細微陰影，增加立體感 */
+
         }
         
         input[type="file"] { display: none; }
