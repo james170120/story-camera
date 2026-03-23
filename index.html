@@ -8,6 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
+        /* 引入可愛圓潤的 Google 字體 */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
+
         body {
             display: flex;
             flex-direction: column;
@@ -15,17 +18,22 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f8ff;
-            font-family: 'Arial', sans-serif;
+            background-color: #fff9e6; /* 換成溫暖的鵝黃色底，更有繪本感 */
+            font-family: 'Nunito', 'Arial', sans-serif;
             overflow: hidden;
         }
-        h1 { color: #ff6b6b; margin-bottom: 20px; }
+        h1 { 
+            color: #ff6b6b; 
+            margin-bottom: 20px; 
+            text-shadow: 2px 2px 0px #ffeaa7; /* 加上可愛的文字陰影 */
+            font-size: 36px;
+        }
         
         /* 登入畫面 */
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #f0f8ff;
+            background-color: #fff9e6;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -35,23 +43,70 @@
         input[type="text"] {
             font-size: 24px;
             padding: 15px;
-            border-radius: 15px;
-            border: 3px solid #ccc;
+            border-radius: 20px;
+            border: 4px solid #f3a683; /* 邊框加粗變可愛 */
             text-align: center;
             width: 60%;
             margin-bottom: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            color: #555;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
         }
-        #loginBtn {
-            background-color: #4CAF50;
+
+        /* 童話風立體按鈕的基礎設定 */
+        .camera-btn, #loginBtn {
             color: white;
             font-size: 24px;
-            font-weight: bold;
-            padding: 15px 40px;
-            border-radius: 30px;
-            border: 5px solid #388E3C;
+            font-weight: 900;
+            padding: 20px 40px; /* 調整比例讓它更圓潤 */
+            border-radius: 50px;
             cursor: pointer;
+            transition: all 0.1s;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            font-family: 'Nunito', sans-serif;
         }
         
+        /* 按下去的動態回饋 */
+        .camera-btn:active, #loginBtn:active { 
+            transform: scale(0.95) translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2) !important;
+        }
+
+        /* 個別按鈕的配色：登入按鈕 (綠色系) */
+        #loginBtn {
+            background: linear-gradient(180deg, #78e08f 0%, #38ada9 100%);
+            border: 4px solid #079992;
+            box-shadow: 0 8px 0 #079992, 0 15px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* 個別按鈕的配色：拍照按鈕 (黃橘色系) */
+        #cameraLabel {
+            background: linear-gradient(180deg, #f6e58d 0%, #f9ca24 100%);
+            border: 4px solid #f0932b;
+            box-shadow: 0 8px 0 #f0932b, 0 15px 20px rgba(0,0,0,0.2);
+            color: #d35400; /* 為了對比好，文字用深橘色 */
+            text-shadow: 1px 1px 0px #fff;
+        }
+        
+        /* 個別按鈕的配色：播放按鈕 (藍色系) */
+        #playBtn {
+            background: linear-gradient(180deg, #82ccdd 0%, #60a3bc 100%);
+            border: 4px solid #3c6382;
+            box-shadow: 0 8px 0 #3c6382, 0 15px 20px rgba(0,0,0,0.2);
+            display: none;
+            margin-top: 20px;
+        }
+        
+        /* 個別按鈕的配色：重新登入按鈕 (橘紅色系) */
+        #retryLoginBtn {
+            background: linear-gradient(180deg, #fab1a0 0%, #e17055 100%);
+            border: 4px solid #d63031;
+            box-shadow: 0 8px 0 #d63031, 0 15px 20px rgba(0,0,0,0.2);
+            display: none;
+            margin-top: 20px;
+        }
+
         /* 故事機主要畫面 */
         #mainScreen {
             display: none;
@@ -60,58 +115,35 @@
             width: 100%;
         }
         #greetingText {
-            font-size: 22px;
-            color: #2196F3;
-            font-weight: bold;
-            margin-bottom: 20px;
+            font-size: 26px;
+            color: #38ada9;
+            font-weight: 900;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 0px #fff;
         }
         input[type="file"] { display: none; }
-        .camera-btn {
-            background-color: #ffcc00;
-            color: #333;
-            font-size: 24px;
-            font-weight: bold;
-            padding: 40px 60px;
-            border-radius: 50px;
-            border: 5px solid #ff9900;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        .camera-btn:active { transform: scale(0.95); }
-        
-        #playBtn {
-            background-color: #4CAF50;
-            color: white;
-            border: 5px solid #388E3C;
-            display: none;
-            margin-top: 20px;
-        }
-        
-        #retryLoginBtn {
-            background-color: #FF9800;
-            color: white;
-            border: 5px solid #F57C00;
-            display: none;
-            margin-top: 20px;
-        }
 
         #status {
-            margin-top: 20px;
-            font-size: 18px;
+            margin-top: 30px;
+            font-size: 20px;
             color: #555;
             font-weight: bold;
             text-align: center;
-            padding: 0 20px;
+            padding: 15px 25px;
             line-height: 1.5;
+            background-color: white;
+            border-radius: 20px;
+            border: 3px dashed #f3a683; /* 加個可愛的虛線框 */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         #preview {
             margin-top: 20px;
             max-width: 80%;
             max-height: 200px;
-            border-radius: 15px;
+            border-radius: 20px;
             display: none;
-            border: 3px dashed #ccc;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -119,7 +151,7 @@
 
     <div id="loginScreen">
         <h1>🔐 魔法照片故事機</h1>
-        <div style="font-size: 18px; color: #555; margin-bottom: 10px; font-weight: bold;">請輸入今天的魔法咒語：</div>
+        <div style="font-size: 20px; color: #e17055; margin-bottom: 15px; font-weight: 900;">請輸入今天的魔法咒語：</div>
         <input type="text" id="passwordInput" placeholder="輸入咒語">
         <button id="loginBtn">進入魔法相機</button>
     </div>
@@ -214,8 +246,8 @@
                 const mins = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
                 
                 let timeMsg = hours > 0 ? `${hours} 小時 ${mins} 分鐘` : `${mins} 分鐘`;
-                statusText.innerHTML = `😴 <b>魔法精靈睡午覺囉！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
-                statusText.style.color = '#FF9800';
+                statusText.innerHTML = `😴 <b>噓~魔法精靈正在睡覺補充能量！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
+                statusText.style.color = '#e17055';
                 return;
             }
 
@@ -227,7 +259,7 @@
                 localStorage.setItem('mimi_cooldownUntil', newCooldown);
                 
                 statusText.innerHTML = `✨ <b>已經聽完 ${MAX_STORIES} 個故事囉！</b><br>魔法精靈要去休息 ${COOLDOWN_HOURS} 小時了，晚點再來吧！掰掰！`;
-                statusText.style.color = '#FF9800';
+                statusText.style.color = '#e17055';
                 return;
             }
         });
@@ -263,7 +295,7 @@
 
                     const remaining = MAX_STORIES - storyCount;
                     statusText.innerText = `✅ 故事寫好囉！(本次還能再聽 ${remaining} 個)`;
-                    statusText.style.color = '#4CAF50';
+                    statusText.style.color = '#38ada9';
                     
                     const audioBlob = await response.blob();
                     const audioUrl = URL.createObjectURL(audioBlob);
@@ -271,7 +303,7 @@
                     playBtn.style.display = 'block';
                 } else {
                     statusText.innerText = '❌ 魔法咒語不對喔！請重新施展嘿。';
-                    statusText.style.color = 'red';
+                    statusText.style.color = '#d63031';
                     localStorage.removeItem('magicPassword');
                     localStorage.removeItem('loginDate');
                     
@@ -280,7 +312,7 @@
                 }
             } catch (error) {
                 statusText.innerText = '❌ 咦~網路斷線了捏，快請爸爸幫忙檢查一下！';
-                statusText.style.color = 'red';
+                statusText.style.color = '#d63031';
                 cameraLabel.style.display = 'block';
             }
         });
@@ -301,13 +333,13 @@
             audioPlayer.play();
             playBtn.style.display = 'none'; 
             statusText.innerText = '🎶 故事播放中...';
-            statusText.style.color = '#2196F3';
+            statusText.style.color = '#38ada9';
         });
 
         audioPlayer.onended = function() {
             let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
             if (storyCount >= MAX_STORIES) {
-                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>你已經聽滿 ${MAX_STORIES} 個囉，請按下面的按鈕讓精靈去睡覺！`;
+                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>哇~你已經聽滿 ${MAX_STORIES} 個囉，請按下面的按鈕讓精靈去睡覺！`;
             } else {
                 statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
             }
