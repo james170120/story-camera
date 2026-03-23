@@ -325,13 +325,17 @@
             if (cooldownUntil > 0 && now < cooldownUntil) {
                 event.preventDefault(); 
                 const remainingMs = cooldownUntil - now;
-                const hours = Math.floor(remainingMs / (1000 * 60 * 60));
-                const mins = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                
+                // ⭐️ 修正：更精準的時間計算，避免出現「60 分鐘」
+                const totalMins = Math.ceil(remainingMs / (1000 * 60));
+                const hours = Math.floor(totalMins / 60);
+                const mins = totalMins % 60;
                 
                 let timeMsg = hours > 0 ? `${hours} 小時 ${mins} 分鐘` : `${mins} 分鐘`;
                 statusText.innerHTML = `😴 <b>魔法精靈睡覺補充能量中！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
                 statusText.style.color = '#e17055';
                 return;
+            }
             }
 
             if (storyCount >= MAX_STORIES) {
