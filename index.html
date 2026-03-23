@@ -414,7 +414,7 @@
             let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
             // ⭐️ 修正：🎉 故事說完啦！
             if (storyCount >= MAX_STORIES) {
-                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>你已經聽滿 ${MAX_STORIES} 個囉，請按下面的按鈕讓精靈去睡覺！`;
+                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>你已經聽滿 ${MAX_STORIES} 個囉，請讓精靈去睡覺補充能量吧！`;
             } else {
                 statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
             }
