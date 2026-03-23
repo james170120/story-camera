@@ -286,7 +286,10 @@
         function showMainScreen() {
             loginScreen.style.display = 'none';
             mainScreen.style.display = 'flex';
-            greetingText.innerText = `👋 嗨！<br>準備好拍神奇的照片了嗎？`; 
+            
+            // ⭐️ 修正：從 innerText 改為 innerHTML，並加入 <br> 換行
+            greetingText.innerHTML = `魔法提示<br>找到你喜歡的東西<br>按下照相機拍照`; 
+        }
         }
 
         checkLogin();
