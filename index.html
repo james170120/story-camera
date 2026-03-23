@@ -18,7 +18,12 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background-color: #fff9e6; /* 換成溫暖的鵝黃色底，更有繪本感 */
+            /* === 👇 專屬天空背景圖設定 👇 === */
+            background-image: url('whimsical_sky.png'); /* 請將我生成的圖片上傳到根目錄 */
+            background-size: cover; /* 圖片完整覆蓋背景 */
+            background-position: center; /* 圖片置中 */
+            background-repeat: no-repeat;
+            /* =============================== */
             font-family: 'Nunito', 'Arial', sans-serif;
             overflow: hidden;
         }
@@ -246,7 +251,7 @@
                 const mins = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
                 
                 let timeMsg = hours > 0 ? `${hours} 小時 ${mins} 分鐘` : `${mins} 分鐘`;
-                statusText.innerHTML = `😴 <b>噓~魔法精靈正在睡覺補充能量！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
+                statusText.innerHTML = `😴 <b>魔法精靈睡午覺囉！</b><br>請等 ${timeMsg} 後再來找我玩喔！`;
                 statusText.style.color = '#e17055';
                 return;
             }
@@ -338,8 +343,9 @@
 
         audioPlayer.onended = function() {
             let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
+            // ⭐️ 修正：🎉 故事說完啦！
             if (storyCount >= MAX_STORIES) {
-                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>哇~你已經聽滿 ${MAX_STORIES} 個囉，請按下面的按鈕讓精靈去睡覺！`;
+                statusText.innerHTML = `🎉 <b>故事說完啦！</b><br>你已經聽滿 ${MAX_STORIES} 個囉，請按下面的按鈕讓精靈去睡覺！`;
             } else {
                 statusText.innerText = '🎉 故事說完啦！還要再拍一張嗎？';
             }
