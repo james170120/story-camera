@@ -69,12 +69,21 @@
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(240, 248, 255, 0.9); 
+            background-color: transparent; 
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 100;
+            /* 如果你覺得背景太亮，想讓中間的盒子更明顯，可以加一點點淡出的黑色煙霧感 (可選) */
+            background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(0,0,0,0.1) 100%);
+        }
+        .login-box {
+            background: #f7e8c3; 
+            border: 4px solid #a3815f; 
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); /* 增加陰影，讓盒子像浮在空中 */
         }
         input[type="text"] {
             font-size: 24px;
@@ -90,21 +99,36 @@
             font-weight: bold;
         }
         
-        /* === 👉 童話風圖章按鈕基础設定 === */
-        .story-stamp {
-            color: white;
-            font-size: 24px;
-            font-weight: 900;
-            padding: 20px 40px; 
-            border-radius: 50px; 
-            cursor: pointer;
-            transition: all 0.1s;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            font-family: 'Nunito', sans-serif;
+        /* === 修正：登入按鈕與魔法光暈效果 === */
+        #loginBtn {
+            background: linear-gradient(180deg, #78e08f 0%, #38ada9 100%);
             border: 6px solid #e2af65; 
-            box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.3);
+            
+            /* 👇 注入魔法光暈文字 👇 */
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 1),   /* 第一層：白光核心 */
+                0 0 15px rgba(255, 242, 0, 0.8),    /* 第二層：黃色發光 */
+                1px 1px 2px rgba(0, 0, 0, 0.4);     /* 第三層：深色邊緣 */
+
+            /* 👇 啟動呼吸燈動畫 👇 */
+            animation: magic-breathing 2.5s ease-in-out infinite;
         }
-        .story-stamp:active { 
+
+        /* === 魔法呼吸燈動畫設定 === */
+        @keyframes magic-breathing {
+            0% { transform: scale(1); box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.3); }
+            50% { 
+                transform: scale(1.05); /* 輕微放大 */
+                /* 讓發光變得更強一點 */
+                box-shadow: 0 4px 0 #b07d3f, 0 0px 25px rgba(255, 242, 0, 0.6); 
+            }
+            100% { transform: scale(1); box-shadow: 0 4px 0 #b07d3f, 0 8px 15px rgba(0,0,0,0.3); }
+        }
+
+        /* 確保按鈕被按下去時動畫會暫停，才有按壓感 */
+        #loginBtn:active { 
+            animation: none; 
             transform: scale(0.95) translateY(4px); 
             box-shadow: 0 0px 0 #b07d3f !important;
         }
