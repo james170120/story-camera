@@ -334,6 +334,15 @@
 
         loginBtn.addEventListener('click', function() {
             const pwd = passwordInput.value.trim();
+            
+            // ⭐️ 新增：爸爸專屬的「秘密重置咒語」
+            if (pwd === '0000' || pwd === 'reset') {
+                localStorage.clear(); // 瞬間清除手機內所有防沉迷紀錄與密碼
+                alert('🛠️ 【爸爸專屬魔法】\n所有的冷卻時間與聽故事紀錄都已經清除囉！請重新輸入給女兒的正常咒語。');
+                passwordInput.value = ''; // 清空輸入框
+                return; // 留在登入畫面，不進入相機
+            }
+
             if (pwd !== '') {
                 localStorage.setItem('magicPassword', pwd);
                 localStorage.setItem('loginDate', new Date().toDateString());
