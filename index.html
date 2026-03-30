@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
-        /* 引入可愛圓潤且豐富的 Google 字體 */
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Playfair+Display:wght@700;900&display=swap');
 
         body {
@@ -29,7 +28,6 @@
             box-shadow: inset 0 0 100px rgba(0,0,0,0.4);
         }
         
-        /* === 標題：深紅色故事書標籤框 (層次強化版) === */
         .fairytale-tag {
             background: linear-gradient(135deg, #d63031 0%, #b32323 100%);
             border: 4px solid #f9ca24; 
@@ -67,7 +65,6 @@
             font-size: 28px;
         }
         
-        /* === 登入畫面 === */
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -101,7 +98,6 @@
             font-weight: bold;
         }
         
-        /* === 通用按鈕樣式 === */
         .story-stamp {
             color: white;
             font-weight: 900;
@@ -153,7 +149,6 @@
             box-shadow: 0 0px 0 #2d8a87 !important;
         }
 
-        /* === 拍照按鈕 === */
         #cameraLabel {
             background: linear-gradient(180deg, #f6e58d 0%, #f9ca24 100%);
             display: block;      
@@ -187,7 +182,6 @@
             display: none;
         }
 
-        /* === 主要畫面排版 === */
         #mainScreen {
             display: none;
             flex-direction: column;
@@ -271,9 +265,7 @@
             color: #38ada9 !important; 
         }
 
-        /* ==========================================
-           ⭐️ 新增：魔法語言選擇器樣式
-           ========================================== */
+        /* 語言選擇器樣式 */
         .language-selector {
             display: flex;
             gap: 15px;
@@ -289,7 +281,7 @@
             background: white;
             border: 3px solid #ccc;
             border-radius: 20px;
-            padding: 8px 15px;
+            padding: 8px 20px;
             font-size: 18px;
             font-weight: 900;
             color: #555;
@@ -299,20 +291,11 @@
             box-shadow: 0 4px 0 #ccc;
         }
 
-        /* 選中時的樣式 (以不同顏色區分) */
         .lang-btn.active[data-lang="zh"] {
             background: #ffdd59;
             border-color: #ffc048;
             color: #d35400;
             box-shadow: 0 4px 0 #ffc048, 0 0 15px rgba(255, 221, 89, 0.8);
-            transform: translateY(-2px);
-        }
-        
-        .lang-btn.active[data-lang="tw"] {
-            background: #0be881;
-            border-color: #05c46b;
-            color: #1e272e;
-            box-shadow: 0 4px 0 #05c46b, 0 0 15px rgba(11, 232, 129, 0.8);
             transform: translateY(-2px);
         }
 
@@ -351,7 +334,6 @@
 
         <div class="language-selector">
             <button class="lang-btn active" data-lang="zh">🇹🇼 中文</button>
-            <button class="lang-btn" data-lang="tw">🧧 台語</button>
             <button class="lang-btn" data-lang="en">🇺🇸 英文</button>
         </div>
 
@@ -366,16 +348,11 @@
     </div>
 
     <script>
-        // ==========================================
-        // 🛠️ 爸爸專用設定區 🛠️
-        // ==========================================
         const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
         const MAX_STORIES = 5;       
         const COOLDOWN_HOURS = 3;    
         
-        // ⭐️ 新增：記錄當前選擇的語言，預設為中文
         let currentLanguage = 'zh'; 
-        // ==========================================
 
         const loginScreen = document.getElementById('loginScreen');
         const mainScreen = document.getElementById('mainScreen');
@@ -383,17 +360,12 @@
         const loginBtn = document.getElementById('loginBtn');
         const greetingText = document.getElementById('greetingText');
 
-        // ⭐️ 新增：處理語言按鈕點擊事件
         const langBtns = document.querySelectorAll('.lang-btn');
         langBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // 移除所有按鈕的 active 狀態
                 langBtns.forEach(b => b.classList.remove('active'));
-                // 為點擊的按鈕加上 active 狀態
                 this.classList.add('active');
-                // 更新當前選擇的語言變數
                 currentLanguage = this.getAttribute('data-lang');
-                console.log('當前選擇語言:', currentLanguage);
             });
         });
 
@@ -479,16 +451,13 @@
             playBtn.style.display = 'none';
             retryLoginBtn.style.display = 'none'; 
             
-            // ⭐️ 根據選擇的語言改變提示文字
-            let langHint = "中文";
-            if(currentLanguage === 'tw') langHint = "台語";
-            if(currentLanguage === 'en') langHint = "英文";
+            // ⭐️ 更新狀態提示：僅判斷中文與英文
+            let langHint = currentLanguage === 'en' ? "英文" : "中文";
             statusText.innerText = `✨ 魔法精靈正在準備【${langHint}】故事...`;
 
             const formData = new FormData();
             formData.append('data', file); 
             formData.append('password', localStorage.getItem('magicPassword')); 
-            // ⭐️ 關鍵：將選擇的語言傳送給 n8n
             formData.append('language', currentLanguage); 
 
             try {
