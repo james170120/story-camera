@@ -16,16 +16,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* ⭐️ 關鍵修改：從 center 改成 flex-start，讓內容乖乖從上面排下來 */
-            min-height: 100vh;           /* ⭐️ 確保背景至少有一個螢幕高 */
+            justify-content: flex-start;
+            min-height: 100vh;
             margin: 0;
             background-image: url('whimsical_sky.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed; /* ⭐️ 讓背景固定，萬一需要滑動時背景不會跟著跑 */
+            background-attachment: fixed;
             font-family: 'Nunito', 'Arial', sans-serif;
-            overflow-y: auto;            /* ⭐️ 關鍵修改：打開垂直滾動條，萬一螢幕比較小也能往下滑 */
+            overflow-y: auto;
             box-shadow: inset 0 0 100px rgba(0,0,0,0.4);
         }
         
@@ -67,7 +67,7 @@
             font-size: 28px;
         }
         
-        /* === 登入畫面：透明背景透出魔法背景 === */
+        /* === 登入畫面 === */
         #loginScreen {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -101,7 +101,7 @@
             font-weight: bold;
         }
         
-        /* === 通用按鈕樣式：魔法閃爍光芒 === */
+        /* === 通用按鈕樣式 === */
         .story-stamp {
             color: white;
             font-weight: 900;
@@ -115,7 +115,6 @@
             -webkit-user-select: none;
         }
 
-        /* ⭐️ 魔法閃光動畫 */
         .story-stamp::before {
             content: "";
             position: absolute;
@@ -132,7 +131,6 @@
             100% { left: 150%; }
         }
 
-        /* 登入按鈕：呼吸燈 */
         #loginBtn {
             background: linear-gradient(180deg, #78e08f 0%, #38ada9 100%);
             font-size: 28px;
@@ -155,7 +153,7 @@
             box-shadow: 0 0px 0 #2d8a87 !important;
         }
 
-        /* === 拍照按鈕：加大且固定位置 === */
+        /* === 拍照按鈕 === */
         #cameraLabel {
             background: linear-gradient(180deg, #f6e58d 0%, #f9ca24 100%);
             display: block;      
@@ -179,7 +177,6 @@
             text-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
         }
         
-        /* 播放按鈕 */
         #playBtn {
             background: linear-gradient(180deg, #82ccdd 0%, #60a3bc 100%);
             padding: 16px 60px;
@@ -196,14 +193,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding-top: 50px;    /* ⭐️ 加大頂部留白，避開手機最上方的系統時間與瀏海 */
-            padding-bottom: 40px; /* ⭐️ 底部也留一點呼吸空間 */
+            padding-top: 50px;
+            padding-bottom: 40px;
             width: 100%;
             min-height: 100vh;
             box-sizing: border-box;
         }
         
-        /* === 羊皮紙問候語：倒角 + 紅字光暈 === */
         #greetingText {
             font-size: 22px; 
             color: #d63031; 
@@ -213,10 +209,7 @@
             background-size: 100% 100%; 
             background-position: center;
             background-repeat: no-repeat;
-            
-            /* 👇 稍微縮小這邊的 padding，讓羊皮紙變扁一點點 👇 */
             padding: 40px 30px; 
-            
             text-align: center;
             line-height: 1.5;
             font-family: 'Baloo 2', 'Nunito', sans-serif;
@@ -233,21 +226,19 @@
         
         input[type="file"] { display: none; }
 
-        /* === ⭐️ 商業級細節：拍立得照片相框 === */
         #preview {
             margin-top: 15px;
             max-width: 65%;
             max-height: 200px;
             display: none;
-            padding: 12px 12px 40px 12px; /* 底部留白做拍立得效果 */
+            padding: 12px 12px 40px 12px;
             background: white;
             border-radius: 4px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            transform: rotate(-3deg); /* 微微傾斜更自然 */
+            transform: rotate(-3deg);
             border: none;
         }
 
-        /* === 狀態欄：磨砂玻璃質感 === */
         #status {
             margin-top: 20px;
             font-size: 19px;
@@ -264,21 +255,78 @@
             text-shadow: 0 0 10px white;
             text-align: center;
         }
-        /* === ⭐️ 新增：播放中狀態的專屬動畫 === */
+
         @keyframes status-pulse {
             0% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
             50% { 
                 transform: scale(1.03); 
-                box-shadow: 0 0 25px rgba(56, 173, 169, 0.7); /* 發出藍綠色魔法光 */
+                box-shadow: 0 0 25px rgba(56, 173, 169, 0.7);
                 border-color: #38ada9;
             }
             100% { transform: scale(1); box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
         }
         
-        /* 當 JavaScript 加上這個 class 時，就會啟動動畫 */
         .playing-active {
             animation: status-pulse 2s ease-in-out infinite;
-            color: #38ada9 !important; /* 文字變成清爽的藍綠色 */
+            color: #38ada9 !important; 
+        }
+
+        /* ==========================================
+           ⭐️ 新增：魔法語言選擇器樣式
+           ========================================== */
+        .language-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .lang-btn {
+            background: white;
+            border: 3px solid #ccc;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 18px;
+            font-weight: 900;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 4px 0 #ccc;
+        }
+
+        /* 選中時的樣式 (以不同顏色區分) */
+        .lang-btn.active[data-lang="zh"] {
+            background: #ffdd59;
+            border-color: #ffc048;
+            color: #d35400;
+            box-shadow: 0 4px 0 #ffc048, 0 0 15px rgba(255, 221, 89, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .lang-btn.active[data-lang="tw"] {
+            background: #0be881;
+            border-color: #05c46b;
+            color: #1e272e;
+            box-shadow: 0 4px 0 #05c46b, 0 0 15px rgba(11, 232, 129, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .lang-btn.active[data-lang="en"] {
+            background: #4bcffa;
+            border-color: #0fbcf9;
+            color: #1e272e;
+            box-shadow: 0 4px 0 #0fbcf9, 0 0 15px rgba(75, 207, 250, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .lang-btn:active {
+            transform: translateY(4px) !important;
+            box-shadow: 0 0px 0 transparent !important;
         }
     </style>
 </head>
@@ -300,6 +348,13 @@
             <h1>📸 魔法照片故事機</h1>
         </div>
         <div id="greetingText"></div>
+
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="zh">🇹🇼 中文</button>
+            <button class="lang-btn" data-lang="tw">🧧 台語</button>
+            <button class="lang-btn" data-lang="en">🇺🇸 英文</button>
+        </div>
+
         <label for="cameraInput" id="cameraLabel" class="story-stamp"></label>
         <input type="file" id="cameraInput" accept="image/*" capture="environment">
         <img id="preview" src="" alt="照片預覽">
@@ -317,6 +372,9 @@
         const N8N_WEBHOOK_URL = 'https://james15211521.zeabur.app/webhook/story-camera';
         const MAX_STORIES = 5;       
         const COOLDOWN_HOURS = 3;    
+        
+        // ⭐️ 新增：記錄當前選擇的語言，預設為中文
+        let currentLanguage = 'zh'; 
         // ==========================================
 
         const loginScreen = document.getElementById('loginScreen');
@@ -324,6 +382,20 @@
         const passwordInput = document.getElementById('passwordInput');
         const loginBtn = document.getElementById('loginBtn');
         const greetingText = document.getElementById('greetingText');
+
+        // ⭐️ 新增：處理語言按鈕點擊事件
+        const langBtns = document.querySelectorAll('.lang-btn');
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 移除所有按鈕的 active 狀態
+                langBtns.forEach(b => b.classList.remove('active'));
+                // 為點擊的按鈕加上 active 狀態
+                this.classList.add('active');
+                // 更新當前選擇的語言變數
+                currentLanguage = this.getAttribute('data-lang');
+                console.log('當前選擇語言:', currentLanguage);
+            });
+        });
 
         function checkLogin() {
             const today = new Date().toDateString();
@@ -335,12 +407,11 @@
         loginBtn.addEventListener('click', function() {
             const pwd = passwordInput.value.trim();
             
-            // ⭐️ 新增：爸爸專屬的「秘密重置咒語」
             if (pwd === '0000' || pwd === 'reset') {
-                localStorage.clear(); // 瞬間清除手機內所有防沉迷紀錄與密碼
+                localStorage.clear(); 
                 alert('🛠️ 【爸爸專屬魔法】\n所有的冷卻時間與聽故事紀錄都已經清除囉！請重新輸入給女兒的正常咒語。');
-                passwordInput.value = ''; // 清空輸入框
-                return; // 留在登入畫面，不進入相機
+                passwordInput.value = ''; 
+                return; 
             }
 
             if (pwd !== '') {
@@ -407,11 +478,18 @@
             cameraLabel.style.display = 'none';
             playBtn.style.display = 'none';
             retryLoginBtn.style.display = 'none'; 
-            statusText.innerText = '✨ 魔法精靈正在確認通關密語...';
+            
+            // ⭐️ 根據選擇的語言改變提示文字
+            let langHint = "中文";
+            if(currentLanguage === 'tw') langHint = "台語";
+            if(currentLanguage === 'en') langHint = "英文";
+            statusText.innerText = `✨ 魔法精靈正在準備【${langHint}】故事...`;
 
             const formData = new FormData();
             formData.append('data', file); 
             formData.append('password', localStorage.getItem('magicPassword')); 
+            // ⭐️ 關鍵：將選擇的語言傳送給 n8n
+            formData.append('language', currentLanguage); 
 
             try {
                 const response = await fetch(N8N_WEBHOOK_URL, { method: 'POST', body: formData });
@@ -452,12 +530,10 @@
             audioPlayer.play();
             playBtn.style.display = 'none'; 
             statusText.innerText = '🎶 故事播放中...';
-            /* 👇 ⭐️ 新增這行：開啟播放動畫 👇 */
             statusText.classList.add('playing-active');
         });
 
         audioPlayer.onended = function() {
-            /* 👇 ⭐️ 新增這行：故事結束，關閉動畫 👇 */
             statusText.classList.remove('playing-active');
             
             let storyCount = parseInt(localStorage.getItem('mimi_storyCount')) || 0;
